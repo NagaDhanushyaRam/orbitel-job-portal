@@ -1,0 +1,59 @@
+# ---- Java / Maven / Gradle ----
+target/
+*.class
+*.log
+*.jar
+*.war
+*.ear
+.springBeans
+.sts4-cache/
+.mvn/wrapper/maven-wrapper.jar
+.settings/
+.classpath
+.project
+.idea/
+*.iml
+out/
+
+# Gradle
+.gradle/
+build/
+**/build/
+
+# ---- Spring Boot ----
+# Application secrets (use example file instead)
+**/application.properties
+**/application.yml
+**/application.yaml
+
+# ---- Node / React ----
+node_modules/
+dist/
+.build/
+.cache/
+*.cache
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.pnp.*
+
+# Vite / Webpack artifacts
+*.local
+.env*
+!.env.example
+!.env.*.example
+
+# ---- OS / Editor ----
+.DS_Store
+Thumbs.db
+.vscode/
+*.swp
+
+# ---- Coverage / Reports ----
+coverage/
+*.lcov
+reports/
+
+# ---- Database dumps ----
+*.sql
+*.dump

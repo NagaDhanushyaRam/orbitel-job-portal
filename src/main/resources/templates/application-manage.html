@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <title>Manage Application – ORBITEL</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" th:href="@{/css/styles.css}">
+</head>
+<body>
+    <nav style="padding:1em; border-bottom:1px solid #ccc;">
+      <a th:href="@{/dashboard}">My Home |</a> 
+      <a th:href="@{/profile}">Profile |</a> 
+      <a th:if="${#authorization.expression('hasRole(''EMPLOYER'')')}"
+          th:href="@{/jobs/my}">
+          My Jobs |
+      </a> 
+      <a th:if="${#authorization.expression('hasRole(''EMPLOYER'')')}"
+          th:href="@{/jobs}">
+          All Jobs |
+      </a> 
+      <a th:if="${#authorization.expression('hasRole(''EMPLOYER'')')}"
+          th:href="@{/messages}">
+          Inbox |
+      </a> 
+        <a th:href="@{/applications/job/{jobId}(jobId=${app.job.id})}">
+          Back to Applicants |
+        </a>
+        <a th:href="@{/logout}">Logout</a>
+  </nav>
+
+  <h2 th:text="'Manage: ' + ${app.seeker.name}">Applicant</h2>
+
+  <p>
+    <strong>Applied:</strong>
+    <span th:text="${#temporals.format(app.appliedAt, 'MMM d, yyyy HH:mm')}"></span>
+  </p>
+
+  <p>
+    <strong>Cover Letter:</strong><br/>
+    <span th:utext="${app.coverLetter}"></span>
+  </p>
+
+  <form th:action="@{/applications/{appId}/manage(appId=${app.id})}" method="post">
+    <div>
+      <label for="status">Status</label>
+      <select id="status" name="status">
+        <option th:each="st : ${statuses}"
+                th:value="${st}"
+                th:text="${st}">
+        </option>
+      </select>
+    </div>
+    <div>
+      <label for="interviewAt">Interview Date &amp; Time (optional)</label>
+      <input id="interviewAt" type="datetime-local"
+             name="interviewAt"
+             th:value="${app.interviewAt != null} ? ${#temporals.format(app.interviewAt, 'yyyy-MM-dd''T''HH:mm')} : ''"/>
+    </div>
+    <button type="submit">Save</button>
+  </form>
+</body>
+</html>

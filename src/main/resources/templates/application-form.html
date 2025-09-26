@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head><title>Apply – ORBITEL</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" th:href="@{/css/styles.css}"></head>
+<body>
+  <nav style="padding:1em; border-bottom:1px solid #ccc;">
+  <a th:href="@{/dashboard}">My Home |</a> 
+  <a th:href="@{/profile}">Profile |</a> 
+  <a th:href="@{/jobs}">All Jobs |</a> 
+  <a th:href="@{/messages}">Inbox |</a> 
+  <a th:if="${#authorization.expression('hasRole(''JOB_SEEKER'')')}"
+     th:href="@{/applications/my}">
+    My Applications |
+  </a> 
+  <a th:href="@{/logout}">Logout</a>
+</nav>
+  <h2 th:text="'Apply to: ' + ${job.title}">Apply</h2>
+  <form th:action="@{/applications/apply/{jobId}(jobId=${job.id})}"
+        th:object="${app}" method="post">
+    <div>
+      <label>Cover Letter</label>
+      <textarea th:field="*{coverLetter}" rows="7" required></textarea>
+    </div>
+    <button type="submit">Submit Application</button>
+  </form>
+</body>
+</html>

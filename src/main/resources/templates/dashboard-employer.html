@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <title>Employer Dashboard – ORBITEL</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" th:href="@{/css/styles.css}">
+</head>
+<body>
+
+  <nav style="padding:1em; border-bottom:1px solid #ccc;">
+  <a th:href="@{/dashboard}">My Home |</a> 
+  <a th:href="@{/profile}">Profile |</a> 
+  <a th:if="${#authorization.expression('hasRole(''EMPLOYER'')')}"
+     th:href="@{/jobs/my}">
+    My Jobs |
+  </a> 
+  <a th:if="${#authorization.expression('hasRole(''EMPLOYER'')')}"
+     th:href="@{/jobs}">
+    All Jobs |
+  </a> 
+  <a th:if="${#authorization.expression('hasRole(''EMPLOYER'')')}"
+     th:href="@{/jobs/create}">Post Job |</a> 
+  <a th:if="${#authorization.expression('hasRole(''EMPLOYER'')')}"
+     th:href="@{/messages}">
+    Inbox |
+  </a> 
+  <a th:href="@{/logout}">Logout</a>
+</nav>
+
+  <div style="padding:1em;">
+    <h1>Welcome, <span th:text="${username}"/>!</h1>
+    <p>You are logged in as a Employer.</p>
+    
+  </div>
+
+</body>
+</html>

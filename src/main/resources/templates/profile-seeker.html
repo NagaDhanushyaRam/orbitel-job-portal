@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head><title>Seeker Profile</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" th:href="@{/css/styles.css}"></head>
+<body>
+  <nav style="padding:1em; border-bottom:1px solid #ccc;">
+  <a th:href="@{/dashboard}">My Home |</a> 
+  <a th:href="@{/profile}">Profile |</a> 
+  <a th:href="@{/jobs}">All Jobs |</a> 
+  <a th:href="@{/messages}">Inbox |</a> 
+  <a th:if="${#authorization.expression('hasRole(''JOB_SEEKER'')')}"
+     th:href="@{/applications/my}">
+    My Applications |
+  </a> 
+  <a th:href="@{/logout}">Logout</a>
+</nav>
+  <h2>Your Profile</h2>
+  <form th:action="@{/profile}" th:object="${seekerProfile}" method="post">
+    <div>
+      <label>Headline</label>
+      <input type="text" th:field="*{headline}"/>
+    </div>
+    <div>
+      <label>Summary</label>
+      <textarea th:field="*{summary}"></textarea>
+    </div>
+    <div>
+      <label>Education (comma‑separated)</label>
+      <input type="text" th:field="*{education}"/>
+    </div>
+    <div>
+      <label>Experience (comma‑separated)</label>
+      <input type="text" th:field="*{experience}"/>
+    </div>
+    <div>
+      <label>Skills (comma‑separated)</label>
+      <input type="text" th:field="*{skills}"/>
+    </div>
+    <button type="submit">Save Profile</button>
+  </form>
+</body>
+</html>

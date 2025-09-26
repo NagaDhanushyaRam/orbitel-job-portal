@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <title>Welcome to ORBITEL!</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" th:href="@{/css/styles.css}">
+</head>
+<body class="p-8 font-sans">
+  
+  <header class="mb-8 flex justify-between items-center">
+    <h1 class="text-2xl font-bold">ORBİTEL Job Portal</h1>
+    <nav style="padding:1em; border-bottom:1px solid #ccc;">
+  
+  <a th:href="@{/}">Home |</a> 
+
+  
+  <a th:if="${#authorization.expression('isAnonymous()')}"
+     th:href="@{/register}">
+    Register |
+  </a> 
+  <a th:if="${#authorization.expression('isAnonymous()')}"
+     th:href="@{/login}">
+    Login |
+  </a> 
+
+  
+  <a th:if="${#authorization.expression('isAuthenticated()')}"
+     th:href="@{/dashboard}">
+    Dashboard |
+  </a> 
+
+  
+  <a th:if="${#authorization.expression('hasRole(''JOB_SEEKER'')')}"
+     th:href="@{/jobs}">
+    All Jobs |
+  </a> 
+  <a th:if="${#authorization.expression('hasRole(''JOB_SEEKER'')')}"
+     th:href="@{/applications/my}">
+    My Applications |
+  </a> 
+
+  
+  <a th:if="${#authorization.expression('hasRole(''EMPLOYER'')')}"
+     th:href="@{/jobs/my}">
+    My Jobs |
+  </a> 
+
+  
+  <a th:if="${#authorization.expression('isAuthenticated()')}"
+     th:href="@{/logout}">
+    Logout
+  </a>
+</nav>
+  </header>
+
+  
+  <main>
+    <h2 class="text-xl font-semibold mb-4">Current Job Openings</h2>
+    <ul class="space-y-6">
+      <li th:each="job : ${jobs}"
+          class="border rounded p-4 hover:shadow-lg transition-shadow">
+        <h3 class="text-lg font-bold" th:text="${job.title}">
+          Job Title
+        </h3>
+        <p class="text-gray-700 mb-2" th:text="${job.description}">
+          Job description…
+        </p>
+        <a th:href="@{/jobs/{id}(id=${job.id})}"
+           class="inline-block bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 transition-colors">
+          View Details
+        </a>
+      </li>
+    </ul>
+  </main>
+
+</body>
+</html>

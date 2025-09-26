@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <title>Admin Dashboard – ORBITEL</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" th:href="@{/css/styles.css}">
+</head>
+<body>
+
+  
+  <nav style="padding:1em; border-bottom:1px solid #ccc;">
+    <a th:href="@{/dashboard}">Home |</a> 
+    <a th:href="@{/logout}">Logout</a>
+  </nav>
+
+  <div style="padding:1em;">
+    <h1>Welcome, <span th:text="${username}"/>!</h1>
+    <p>You are logged in as an Admin</p>
+    
+  </div>
+
+</body>
+</html>

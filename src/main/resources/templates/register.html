@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <title>Register – ORBITEL</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" th:href="@{/css/styles.css}">
+</head>
+<body>
+  <nav style="padding:1em; border-bottom:1px solid #ccc;">
+  
+  <a th:href="@{/}">Home |</a> 
+
+  
+  <a th:if="${#authorization.expression('isAnonymous()')}"
+     th:href="@{/register}">
+    Register |
+  </a> 
+  <a th:if="${#authorization.expression('isAnonymous()')}"
+     th:href="@{/login}">
+    Login |
+  </a> 
+
+  
+  <a th:if="${#authorization.expression('isAuthenticated()')}"
+     th:href="@{/dashboard}">
+    Dashboard |
+  </a> 
+
+  
+  <a th:if="${#authorization.expression('hasRole(''JOB_SEEKER'')')}"
+     th:href="@{/jobs}">
+    All Jobs |
+  </a> 
+  <a th:if="${#authorization.expression('hasRole(''JOB_SEEKER'')')}"
+     th:href="@{/applications/my}">
+    My Applications |
+  </a> 
+
+  
+  <a th:if="${#authorization.expression('hasRole(''EMPLOYER'')')}"
+     th:href="@{/jobs/my}">
+    My Jobs |
+  </a> 
+
+  
+  <a th:if="${#authorization.expression('isAuthenticated()')}"
+     th:href="@{/logout}">
+    Logout
+  </a>
+</nav>
+<div class="container mt-5">
+  <h2>Register</h2>
+  <form th:action="@{/register}" th:object="${user}" method="post">
+    <div class="mb-3">
+      <label>Name</label>
+      <input type="text" th:field="*{name}" class="form-control"/>
+    </div>
+    <div class="mb-3">
+      <label>Email</label>
+      <input type="email" th:field="*{email}" class="form-control"/>
+    </div>
+    <div class="mb-3">
+      <label>Password</label>
+      <input type="password" th:field="*{password}" class="form-control"/>
+    </div>
+    <div class="mb-3">
+      <label>Role</label>
+      <select th:field="*{role}" class="form-select">
+        <option th:value="JOB_SEEKER">Job Seeker</option>
+        <option th:value="EMPLOYER">Employer</option>
+      </select>
+    </div>
+    <button type="submit" class="btn btn-primary">Register</button>
+  </form>
+</div>
+</body>
+</html>

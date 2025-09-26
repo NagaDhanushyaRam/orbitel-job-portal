@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head><title>TEST EMPLOYER</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" th:href="@{/css/styles.css}"></head>
+<body>
+  <nav style="padding:1em; border-bottom:1px solid #ccc;">
+  <a th:href="@{/dashboard}">My Home |</a> 
+  <a th:href="@{/profile}">Profile |</a> 
+  <a th:if="${#authorization.expression('hasRole(''EMPLOYER'')')}"
+     th:href="@{/jobs/my}">
+    My Jobs |
+  </a> 
+  <a th:if="${#authorization.expression('hasRole(''EMPLOYER'')')}"
+     th:href="@{/jobs}">
+    All Jobs |
+  </a> 
+  <a th:if="${#authorization.expression('hasRole(''EMPLOYER'')')}"
+     th:href="@{/messages}">
+    Inbox |
+  </a> 
+  <a th:href="@{/logout}">Logout</a>
+</nav>
+
+  <h2 th:text="'Applicants for: ' + ${job.title}">Applicants</h2>
+  <ul>
+    <li th:each="app : ${applications}">
+      <span th:text="${app.seeker.name}">Name</span> – 
+      <span th:text="${app.status}">PENDING</span>
+    
+      <div th:if="${app.interviewAt != null}">
+        Interview at: 
+        <span th:text="${#temporals.format(app.interviewAt,'dd/MM/yyyy HH:mm')}">Date Time</span>
+      </div>
+
+      <div th:if="${app.rsvp != 'NONE'}">
+        RSVP: <span th:text="${app.rsvp}">NONE</span>
+      </div>
+
+      <div>
+        <a th:href="@{/applications/{appId}/manage(appId=${app.id})}">
+          Manage
+        </a>
+      </div>
+    </li>
+  </ul>
+</body>
+</html>

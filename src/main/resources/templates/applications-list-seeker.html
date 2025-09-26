@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head><title>My Applications – ORBITEL</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" th:href="@{/css/styles.css}"></head>
+<body>
+  <nav style="padding:1em; border-bottom:1px solid #ccc;">
+  <a th:href="@{/dashboard}">My Home |</a> 
+  <a th:href="@{/profile}">Profile |</a> 
+  <a th:href="@{/jobs}">All Jobs |</a> 
+  <a th:href="@{/messages}">Inbox |</a> 
+  <a th:if="${#authorization.expression('hasRole(''JOB_SEEKER'')')}"
+     th:href="@{/applications/my}">
+    My Applications |
+  </a> 
+  <a th:href="@{/logout}">Logout</a>
+</nav>
+  <h2>My Applications</h2>
+  <ul>
+    <li th:each="a: ${applications}">
+      <a th:href="@{/jobs/{id}(id=${a.job.id})}"
+         th:text="${a.job.title}">Job</a>
+      – <span th:text="${a.status}">PENDING</span>
+      <span th:if="${a.interviewAt != null}">
+        | Interview: <span th:text="${#temporals.format(a.interviewAt,'MMM d, yyyy HH:mm')}"/>
+      </span>
+
+      
+      <span th:if="${a.interviewAt != null}">
+        | <a th:href="@{/applications/rsvp/{appId}(appId=${a.id})}">
+            RSVP: <span th:text="${a.rsvp}">NONE</span>
+          </a>
+      </span>
+    </li>
+  </ul>
+</body>
+</html>

@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8"/>
+  <title>Admin Dashboard</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" th:href="@{/css/styles.css}">
+</head>
+<body>
+  <nav>
+    <a th:href="@{/}">Home |</a> 
+    <a th:href="@{/logout}">Logout</a>
+  </nav>
+
+  <h1>Admin Console</h1>
+  <p>Welcome, <strong th:text="${adminEmail}">admin@orbitel.com</strong>!</p>
+
+  <table border="1" cellpadding="6">
+    <thead>
+      <tr>
+        <th>Metric</th>
+        <th>Count</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>Total Users</td>
+        <td th:text="${metrics.totalUsers}">0</td>
+      </tr>
+      <tr>
+        <td>Total Job Posts</td>
+        <td th:text="${metrics.totalJobPosts}">0</td>
+      </tr>
+      <tr>
+        <td>Total Applications</td>
+        <td th:text="${metrics.totalApplications}">0</td>
+      </tr>
+      <tr>
+        <td>Pending Applications</td>
+        <td th:text="${metrics.pendingApplications}">0</td>
+      </tr>
+      <tr>
+        <td>Hired Applications</td>
+        <td th:text="${metrics.hiredApplications}">0</td>
+      </tr>
+      <tr>
+        <td>Total Messages</td>
+        <td th:text="${metrics.totalMessages}">0</td>
+      </tr>
+      <tr>
+        <td>Unread Messages</td>
+        <td th:text="${metrics.unreadMessages}">0</td>
+      </tr>
+    </tbody>
+  </table>
+</body>
+</html>

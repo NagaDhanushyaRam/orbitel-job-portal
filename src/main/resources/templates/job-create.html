@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head><title>Create Job – ORBITEL</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" th:href="@{/css/styles.css}"></head>
+<body>
+  <nav>
+    <a th:href="@{/dashboard}">Dashboard |</a> 
+    <nav style="padding:1em; border-bottom:1px solid #ccc;">
+  <a th:href="@{/dashboard}">My Home |</a> 
+  <a th:href="@{/profile}">Profile |</a> 
+  <a th:if="${#authorization.expression('hasRole(''EMPLOYER'')')}"
+     th:href="@{/jobs/my}">
+    My Jobs |
+  </a> 
+  <a th:if="${#authorization.expression('hasRole(''EMPLOYER'')')}"
+     th:href="@{/jobs}">
+    All Jobs |
+  </a> 
+  <a th:if="${#authorization.expression('hasRole(''EMPLOYER'')')}"
+     th:href="@{/messages}">
+    Inbox |
+  </a> 
+  <a th:href="@{/logout}">Logout</a>
+</nav>
+  </nav>
+
+  <h2>Post a New Job</h2>
+  <form th:action="@{/jobs/create}" th:object="${job}" method="post">
+    <div>
+      <label>Title</label>
+      <input type="text" th:field="*{title}" required/>
+    </div>
+    <div>
+      <label>Description</label>
+      <textarea th:field="*{description}" rows="5"></textarea>
+    </div>
+    <div>
+      <label>Location</label>
+      <input type="text" th:field="*{location}"/>
+    </div>
+    <div>
+      <label>Requirements</label>
+      <input type="text" th:field="*{requirements}" placeholder="Skills, experience"/>
+    </div>
+    <div>
+      <label>Salary</label>
+      <input type="number" step="0.01" th:field="*{salary}"/>
+    </div>
+    <button type="submit">Create Job</button>
+  </form>
+</body>
+</html>

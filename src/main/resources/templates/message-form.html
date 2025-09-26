@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <title>Compose Message</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" th:href="@{/css/styles.css}">
+</head>
+<body>
+  <nav style="padding:1em; border-bottom:1px solid #ccc;">
+  
+  <a th:href="@{/}">Home |</a> 
+
+  
+  <a th:if="${#authorization.expression('isAnonymous()')}"
+     th:href="@{/register}">
+    Register |
+  </a> 
+  <a th:if="${#authorization.expression('isAnonymous()')}"
+     th:href="@{/login}">
+    Login |
+  </a> 
+
+  
+  <a th:if="${#authorization.expression('isAuthenticated()')}"
+     th:href="@{/dashboard}">
+    Dashboard |
+  </a> 
+
+  
+  <a th:if="${#authorization.expression('hasRole(''JOB_SEEKER'')')}"
+     th:href="@{/jobs}">
+    All Jobs |
+  </a> 
+  <a th:if="${#authorization.expression('hasRole(''JOB_SEEKER'')')}"
+     th:href="@{/applications/my}">
+    My Applications |
+  </a> 
+
+  
+  <a th:if="${#authorization.expression('hasRole(''EMPLOYER'')')}"
+     th:href="@{/jobs/my}">
+    My Jobs |
+  </a> 
+  <a th:href="@{/messages}">Inbox |</a> 
+    <a th:href="@{/messages/sent}">Sent |</a> 
+    <a th:href="@{/messages/compose}">Compose |</a> 
+  
+  <a th:if="${#authorization.expression('isAuthenticated()')}"
+     th:href="@{/logout}">
+    Logout
+  </a>
+  </nav>
+
+   <h2 th:text="${replyToId} != null ? 'Reply to Message' : 'New Message'">New Message</h2>
+
+  <form  
+    th:object="${message}"
+    th:action="${ replyToId} != null 
+                ? @{/messages/{id}/reply(id=${replyToId})} 
+                : @{/messages/send}"
+    method="post">
+
+    <div>
+      <label for="recipient">To:</label>
+      <select id="recipient" th:field="*{recipient.id}" required>
+        <option value="" disabled th:text="${replyToId}!=null ? '' : '-- select recipient --'">--</option>
+        <option th:each="u : ${users}"
+                th:value="${u.id}"
+                th:text="${u.name + ' (' + u.email + ')'}"
+                th:selected="${message.recipient != null} ? ${u.id} == ${message.recipient.id} : false">
+        </option>
+      </select>
+    </div>
+
+    <div>
+      <label for="subject">Subject:</label>
+      <input id="subject" type="text" th:field="*{subject}" required/>
+    </div>
+
+    <div>
+      <label for="body">Body:</label>
+      <textarea id="body" rows="5" th:field="*{body}" required></textarea>
+    </div>
+
+    <button type="submit"
+      th:text="${replyToId} != null ? 'Send Reply' : 'Send'">
+      Send
+    </button>
+  </form>
+</body>
+</html>

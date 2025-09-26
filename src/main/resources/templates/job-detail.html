@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head><title th:text="${job.title} + ' – ORBITEL'">Job Detail</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" th:href="@{/css/styles.css}"></head>
+<body>
+  <nav>
+    
+    <nav style="padding:1em; border-bottom:1px solid #ccc;">
+  
+  <a th:href="@{/}">Home |</a> 
+
+  
+  <a th:if="${#authorization.expression('isAnonymous()')}"
+     th:href="@{/register}">
+    Register |
+  </a> 
+  <a th:if="${#authorization.expression('isAnonymous()')}"
+     th:href="@{/login}">
+    Login |
+  </a> 
+
+  
+  <a th:if="${#authorization.expression('isAuthenticated()')}"
+     th:href="@{/dashboard}">
+    Dashboard |
+  </a> 
+
+  
+  <a th:if="${#authorization.expression('hasRole(''JOB_SEEKER'')')}"
+     th:href="@{/jobs}">
+    All Jobs |
+  </a> 
+  <a th:if="${#authorization.expression('hasRole(''JOB_SEEKER'')')}"
+     th:href="@{/applications/my}">
+    My Applications |
+  </a> 
+  <a th:href="@{/jobs}">Back to Jobs |</a> 
+
+  
+  <a th:if="${#authorization.expression('hasRole(''EMPLOYER'')')}"
+     th:href="@{/jobs/my}">
+    My Jobs |
+  </a> 
+
+  
+  <a th:if="${#authorization.expression('isAuthenticated()')}"
+     th:href="@{/logout}">
+    Logout
+  </a>
+</nav>
+
+  <h2 th:text="${job.title}">Job Title</h2>
+  <p><strong>Location:</strong> <span th:text="${job.location}"/></p>
+  <p><strong>Posted:</strong> <span th:text="${#temporals.format(job.postedAt, 'MMM d, yyyy HH:mm')}"/></p>
+  <p><strong>Description:</strong><br th:utext="${job.description}"/></p>
+  <p><strong>Requirements:</strong> <span th:text="${job.requirements}"/></p>
+  <p>
+    <strong>Salary:</strong>
+    <span th:if="${job.salary != null}" th:text="${'$' + job.salary}"></span>
+    <span th:unless="${job.salary != null}">N/A</span>
+  </p>
+  <div style="margin-top:1em;">
+    <a th:if="${#authorization.expression('hasRole(''JOB_SEEKER'')')}"
+       th:href="@{/applications/apply/{jobId}(jobId=${job.id})}"
+       class="btn btn-primary">
+      Apply Now
+    </a>
+  </div>
+</body>
+</html>

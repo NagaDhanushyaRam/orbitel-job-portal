@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head><title>Jobs – ORBITEL</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" th:href="@{/css/styles.css}"></head>
+<body>
+  <nav style="padding:1em; border-bottom:1px solid #ccc;">
+  
+  <a th:href="@{/}">Home |</a> 
+
+  
+  <a th:if="${#authorization.expression('isAnonymous()')}"
+     th:href="@{/register}">
+    Register |
+  </a> 
+  <a th:if="${#authorization.expression('isAnonymous()')}"
+     th:href="@{/login}">
+    Login |
+  </a> 
+
+  
+  <a th:if="${#authorization.expression('isAuthenticated()')}"
+     th:href="@{/dashboard}">
+    Dashboard |
+  </a> 
+
+  
+  <a th:if="${#authorization.expression('hasRole(''JOB_SEEKER'')')}"
+     th:href="@{/jobs}">
+    All Jobs |
+  </a> 
+  <a th:if="${#authorization.expression('hasRole(''JOB_SEEKER'')')}"
+     th:href="@{/applications/my}">
+    My Applications |
+  </a> 
+
+  
+  <a th:if="${#authorization.expression('hasRole(''EMPLOYER'')')}"
+     th:href="@{/jobs/my}">
+    My Jobs |
+  </a> 
+  <a th:if="${#authorization.expression('hasRole(''JOB_SEEKER'')')}"
+     th:href="@{/jobs}">
+    All Jobs |
+  </a> 
+  
+  <a th:if="${#authorization.expression('isAuthenticated()')}"
+     th:href="@{/logout}">
+    Logout
+  </a>
+</nav>
+  <form th:action="@{/jobs}" method="get" style="margin:1em 0;">
+    <input type="text" name="q" placeholder="Keyword…" th:value="${q}" />
+    <input type="text" name="location" placeholder="Location" th:value="${location}" />
+    <input type="number" step="0.01" name="minSalary" placeholder="Min Salary"
+           th:value="${minSalary}" />
+    <input type="number" step="0.01" name="maxSalary" placeholder="Max Salary"
+           th:value="${maxSalary}" />
+    <button type="submit">Search</button>
+    <a th:href="@{/jobs}">Clear</a>
+  </form>
+  <h2>Available Jobs</h2>
+  <ul>
+    <li th:each="job : ${jobs}">
+      <a th:href="@{/jobs/{id}(id=${job.id})}" th:text="${job.title}">Job Title</a>
+      – <span th:text="${job.location}">Location</span>
+      <span th:if="${#authorization.expression('hasRole(''JOB_SEEKER'')')}">
+        | <a th:href="@{/applications/apply/{jobId}(jobId=${job.id})}">Apply</a>
+        <a th:if="${#authorization.expression('hasRole(''JOB_SEEKER'')')}"
+          th:href="@{/applications/my}">
+          My Applications
+        </a>
+      </span>
+
+      
+      <span th:if="${#authorization.expression('hasRole(''EMPLOYER'')')}"
+            th:unless="${job.employer.email != #authentication.name}">
+        | <a th:href="@{/applications/job/{jobId}(jobId=${job.id})}">View Applicants</a>
+      </span>
+    </li>
+  </ul>
+</body>
+</html>

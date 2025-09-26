@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head><title>Employer Profile</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" th:href="@{/css/styles.css}"></head>
+<body>
+  <nav style="padding:1em; border-bottom:1px solid #ccc;">
+  <a th:href="@{/dashboard}">My Home |</a> 
+  <a th:href="@{/profile}">Profile |</a> 
+  <a th:if="${#authorization.expression('hasRole(''EMPLOYER'')')}"
+     th:href="@{/jobs/my}">
+    My Jobs |
+  </a> 
+  <a th:if="${#authorization.expression('hasRole(''EMPLOYER'')')}"
+     th:href="@{/jobs}">
+    All Jobs |
+  </a> 
+  <a th:if="${#authorization.expression('hasRole(''EMPLOYER'')')}"
+     th:href="@{/messages}">
+    Inbox |
+  </a> 
+  <a th:href="@{/logout}">Logout</a>
+</nav>
+  <h2>Your Company Profile</h2>
+  <form th:action="@{/profile}" th:object="${employerProfile}" method="post">
+    <div>
+      <label>Company Name</label>
+      <input type="text" th:field="*{companyName}" required/>
+    </div>
+    <div>
+      <label>Website</label>
+      <input type="url" th:field="*{website}"/>
+    </div>
+    <div>
+      <label>Description</label>
+      <textarea th:field="*{description}"></textarea>
+    </div>
+    <div>
+      <label>Industry</label>
+      <input type="text" th:field="*{industry}"/>
+    </div>
+    <div>
+      <label>Location</label>
+      <input type="text" th:field="*{location}"/>
+    </div>
+    <button type="submit">Save Company Info</button>
+  </form>
+</body>
+</html>

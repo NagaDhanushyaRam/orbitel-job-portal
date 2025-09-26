@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head><title th:text="${message.subject}">Message</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" th:href="@{/css/styles.css}"></head>
+<body>
+    <nav style="padding:1em; border-bottom:1px solid #ccc;">
+  
+  <a th:href="@{/}">Home |</a> 
+
+  
+  <a th:if="${#authorization.expression('isAnonymous()')}"
+     th:href="@{/register}">
+    Register |
+  </a>
+  <a th:if="${#authorization.expression('isAnonymous()')}"
+     th:href="@{/login}">
+    Login |
+  </a> 
+
+  
+  <a th:if="${#authorization.expression('isAuthenticated()')}"
+     th:href="@{/dashboard}">
+    Dashboard |
+  </a> 
+
+  
+  <a th:if="${#authorization.expression('hasRole(''JOB_SEEKER'')')}"
+     th:href="@{/jobs}">
+    All Jobs |
+  </a> 
+  <a th:if="${#authorization.expression('hasRole(''JOB_SEEKER'')')}"
+     th:href="@{/applications/my}">
+    My Applications |
+  </a> 
+
+  
+  <a th:if="${#authorization.expression('hasRole(''EMPLOYER'')')}"
+     th:href="@{/jobs/my}">
+    My Jobs |
+  </a> 
+  <a th:href="@{/messages}">Inbox |</a> 
+    <a th:href="@{/messages/sent}">Sent |</a> 
+    <a th:href="@{/messages/compose}">Compose |</a> 
+  
+  <a th:if="${#authorization.expression('isAuthenticated()')}"
+     th:href="@{/logout}">
+    Logout
+  </a>
+  </nav>
+
+  <h2 th:text="${message.subject}">Subject</h2>
+  <p>
+    <strong>From:</strong> <span th:text="${message.sender.name}"></span><br/>
+    <strong>To:</strong>   <span th:text="${message.recipient.name}"></span><br/>
+    <strong>When:</strong> <span th:text="${#temporals.format(message.sentAt,'MMM d yyyy HH:mm')}"></span>
+  </p>
+
+  <div>
+    <pre th:text="${message.body}"></pre>
+  </div>
+
+  <p>
+    <a th:href="@{/messages/{id}/reply(id=${message.id})}">Reply</a>
+  </p>
+</body>
+</html>
