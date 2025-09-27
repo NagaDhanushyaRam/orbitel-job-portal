@@ -1,78 +1,105 @@
 # ORBITEL Job Portal System
 
-A full‑stack job portal with role‑based access for Job Seekers, Employers, and Admins.
+A Spring Boot **monolith** using **Thymeleaf** for the web UI and **MySQL/H2** for persistence. Role‑based access for **Job Seeker**, **Employer**, and **Admin**.
 
 ## Tech Stack
-- **Backend:** Java, Spring Boot, Spring Security, JPA/Hibernate
-- **Database:** MySQL
-- **Frontend:** React (or Thymeleaf), HTML/CSS/JS
-- **Build/Package:** Maven
-- **Auth:** Role‑based (USER/EMPLOYER/ADMIN)
+- **Backend:** Java 17+, Spring Boot, Spring MVC, Spring Security, Spring Data JPA (Hibernate)
+- **View layer:** Thymeleaf templates under `src/main/resources/templates`
+- **Database:** MySQL (prod/dev) and H2 in‑memory (tests/dev)
+- **Build:** Maven (wrapper included: `mvnw`, `mvnw.cmd`)
 
-## Features
-- User registration/login with encrypted passwords
-- Role‑based dashboards (post jobs, apply to jobs, approve listings, admin moderation)
-- CRUD for jobs, applications, and profiles
-- Search, filter, pagination (where applicable)
-- REST APIs for frontend integration
-
-## Project Structure (example)
+## Project Layout
 ```
 orbitel/
-├─ backend/
-│  ├─ src/main/java/... (Spring Boot app)
-│  ├─ src/main/resources/
-│  │  ├─ application.properties.example
-│  │  └─ schema.sql / data.sql (optional)
-│  └─ pom.xml or build.gradle
-└─ frontend/
-   ├─ src/
-   ├─ package.json
-   └─ vite.config.js or webpack config
+├─ pom.xml
+├─ src/main/java/com/orbitel/jobportal/
+│  ├─ OrbitelApplication.java
+│  ├─ config/            # SecurityConfig, etc.
+│  ├─ controller/        # HomeController, AuthController, JobController, ...
+│  ├─ dto/               # DTOs
+│  ├─ entity/            # JPA entities: User, Role, Job, Application, Message, ...
+│  ├─ repository/        # Spring Data repositories
+│  └─ service/           # Service interfaces + impl
+└─ src/main/resources/
+   ├─ templates/         # Thymeleaf views (dashboard-*.html, jobs, profiles, auth, ...)
+   ├─ static/            # CSS (e.g., styles.css)
+   ├─ application.properties.example
+   └─ application-h2.properties.example
 ```
+> Note: Real configs `application.properties` and `application-h2.properties` are **ignored by Git**. Use the `.example` files to create your local copies.
 
-> **Do not commit secrets**. Keep real credentials out of git. Use environment variables and commit only `application.properties.example`.
+## Features (from code)
+- User registration & login (Spring Security)
+- Role‑based dashboards (Admin/Employer/Seeker)
+- CRUD for jobs, applications, messages, and profiles
+- Server‑side rendered pages with Thymeleaf
+- Repositories for Job, Application, User, Profiles, Messages
 
 ## Local Setup
 
-### Prereqs
+### Prerequisites
 - Java 17+
-- MySQL 8+
-- Maven
+- MySQL 8+ (for MySQL profile) or none for H2
+- Maven (wrapper included)
 
-### Configure DB
-Copy `backend/src/main/resources/application.properties.example` to `application.properties` and update values:
+### 1) Create config from examples
+Copy the examples and fill in credentials locally (do **not** commit the real files):
 ```
-spring.datasource.url=jdbc:mysql://localhost:3306/orbitel
-spring.datasource.username=youruser
-spring.datasource.password=yourpass
+cp src/main/resources/application.properties.example src/main/resources/application.properties
+cp src/main/resources/application-h2.properties.example src/main/resources/application-h2.properties
+```
+
+**MySQL example:**
+```properties
+spring.datasource.url=jdbc:mysql://localhost:3306/orbitel?allowPublicKeyRetrieval=true&useSSL=false
+spring.datasource.username=YOUR_USERNAME
+spring.datasource.password=YOUR_PASSWORD
+spring.datasource.driver-class-name=com.mysql.cj.jdbc.Driver
+spring.profiles.active=mysql
+
 spring.jpa.hibernate.ddl-auto=update
-spring.jpa.show-sql=false
+spring.jpa.show-sql=true
+spring.jpa.properties.hibernate.format_sql=true
+spring.jpa.properties.hibernate.dialect=org.hibernate.dialect.MySQL8Dialect
 ```
 
-### Run Backend
-```bash
-cd backend
-./mvnw spring-boot:run    # or: ./gradlew bootRun
+**H2 example (in‑memory):**
+```properties
+spring.datasource.url=jdbc:h2:mem:orbitel;DB_CLOSE_DELAY=-1;MODE=MySQL
+spring.datasource.driverClassName=org.h2.Driver
+spring.datasource.username=sa
+spring.datasource.password=
+
+spring.jpa.hibernate.ddl-auto=create-drop
+spring.jpa.show-sql=true
+spring.jpa.properties.hibernate.format_sql=true
 ```
 
-### Run Frontend
+### 2) Run
 ```bash
-cd frontend
-npm install
-npm run dev
+# from project root
+./mvnw spring-boot:run
+# Windows: mvnw.cmd spring-boot:run
 ```
+App will start on `http://localhost:8080/`.
 
-## Tests
+## Build & Test
 ```bash
-cd backend
+./mvnw clean package
 ./mvnw test
 ```
 
-## Deployment
-- Create production DB and update env vars
-- Package the backend: `./mvnw clean package` -> run jar
-- Build frontend: `npm run build` -> serve static files (e.g., Nginx) or integrate with Spring
+## Deployment (basic)
+- Set env vars or edit `application.properties` for prod DB.
+- Package fat jar and run:
+```bash
+./mvnw clean package
+java -jar target/*-SNAPSHOT.jar
+```
+
+## Security & Secrets
+- Real configs are **gitignored**: keep passwords only locally.
+- Commit only `*.example` config files.
 
 ## License
-MIT. See `LICENSE` for details.
+MIT. See `LICENSE`.
